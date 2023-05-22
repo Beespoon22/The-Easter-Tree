@@ -43,6 +43,8 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(1)
+	if (hasUpgrade('egg', 11)) gain = gain.times(2) // scrambled eggs
+	if (hasUpgrade('egg', 12)) gain = gain.times(upgradeEffect('egg', 12)) // omelet
 	return gain
 }
 

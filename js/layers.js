@@ -15,6 +15,7 @@ addLayer("egg", {
     exponent: 0.5, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
+        if (hasUpgrade('egg', 13)) mult = mult.times(upgradeEffect('egg', 13)) // sunny side up
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -24,5 +25,30 @@ addLayer("egg", {
     hotkeys: [
         {key: "e", description: "E: Reset for eggs", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return true}
+    upgrades: {
+        11: {
+            title: "Scrambled Eggs",
+            description: "The power of a simple breakfast doubles your point gain.",
+            cost: new Decimal(1),
+        },
+        12: {
+            title: "Omelet",
+            description: "The more eggs, the better! Eggs boost point gain.",
+            effect() {
+                return player[this.layer].points.add(1).pow(0.5)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
+            cost: new Decimal(2),
+        },
+        13: {
+            title: "Sunny Side Up",
+            description: "You think there might be a joke here... Not sure what kind, though. Points boost egg gain.",
+            effect() {
+                return player.points.add(1).pow(0.15)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
+            cost: new Decimal(5)
+        },
+    },
+    layerShown(){return true},
 })
